@@ -150,7 +150,6 @@ def main():
 
     glTranslatef(-2,-2, -7)
 
-    d = Driver(60)
     s = FastSorter(40)
     s.sort(0, 40)
     while True:
