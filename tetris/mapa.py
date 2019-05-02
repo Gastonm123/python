@@ -147,9 +147,16 @@ class Mapa:
                     que estar dentro del mapa """
                 if direction in ["left", "right", ""]: 
                     if isInsideCubo(mapaObj, cubo[vertices[0]], config):
-                        return True
+                        #checkear que haya una parte de el arco (0, 1) adentro del cubo
+                        #para eso, si detecto a 0 adentro, hay que hacer diferencia con mapaObj[2][1] y que de mayor a 0
+                        dist = math.fabs(mapaObj[2][1] - cubo[vertices[0]][1])
+                        if gt(dist, 0):
+                            return True
                     if isInsideCubo(mapaObj, cubo[vertices[1]], config):
-                        return True
+                        #si detecto a 1 adentro, hay que hacer la diferencia con mapaObj[0][1]
+                        dist = math.fabs(mapaObj[0][1] - cubo[vertices[1]][1])
+                        if gt(dist, 0):
+                            return True
                 elif isInsideCubo(mapaObj, cubo[vertices[0]], config):
                     if isInsideCubo(mapaObj, cubo[vertices[1]], config):
                         return True

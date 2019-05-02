@@ -19,13 +19,13 @@ def main():
     lock = {}
     p = Pieza()
     p.move(0, 15, 0)
-    vel = 0.125
+    vel = 0.0625
     m = Mapa()
-    pase_max = 4
+    pase_max = 8
     pase = [0, pase_max]
 
     while True:
-        clock.tick(40)
+        clock.tick(80)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -41,21 +41,35 @@ def main():
             p.secure_rotate(90, m)
             lock['up'] = 8
             if pase[1]:
-                pase = [7, pase[1]-1] #pase de 7 frames para reacomodar una pieza
+                pase = [6, pase[1]-1] #pase de 7 frames para reacomodar una pieza
         if keys[pygame.K_DOWN]: # and not 'down' in lock:
             p.secure_move("down", -3*vel, m)
         if keys[pygame.K_SPACE] and not 'space' in lock:
             while p.secure_move("down", -0.75, m):
                 pass
-            lock['space'] = 8
+            while p.secure_move("down", -1*vel, m):
+                pass
+
+            m.pasarCubos(p.cubos)
+            p = Pieza()
+            p.secure_move("up", 15, m)
+
+            if m.collide(p, ""):
+                print "Game Over"
+                raw_input("End?")
+                print "Puntaje " + str(m.puntaje)
+                pygame.display.quit()
+                quit()
+
+            lock['space'] = 16
         if keys[pygame.K_LEFT] and not 'left' in lock:
             p.secure_move("left", -0.5, m)
             p.secure_move("left", -0.5, m)
-            lock['left'] = 4
+            lock['left'] = 8
         if keys[pygame.K_RIGHT] and not 'right' in lock:
             p.secure_move("right", 0.5, m)
             p.secure_move("right", 0.5, m)
-            lock['right'] = 4
+            lock['right'] = 8
         if keys[pygame.K_p]:
             raw_input("continue?")
 
@@ -72,18 +86,21 @@ def main():
         """Ending"""
         if not pase[0]: 
             if not p.secure_move("down", -1*vel, m):
-                m.pasarCubos(p.cubos)
-                p = Pieza()
-                p.secure_move("up", 15, m)
+                if not pase[1]:
+                    m.pasarCubos(p.cubos)
+                    p = Pieza()
+                    p.secure_move("up", 15, m)
 
-                if m.collide(p, ""):
-                    print "Game Over"
-                    raw_input("End?")
-                    print "Puntaje " + str(m.puntaje)
-                    pygame.display.quit()
-                    quit()
-
-            pase[1] = pase_max
+                    if m.collide(p, ""):
+                        print "Game Over"
+                        raw_input("End?")
+                        print "Puntaje " + str(m.puntaje)
+                        pygame.display.quit()
+                        quit()
+                else: 
+                    pase = [6, pase[1]-1]
+            else:
+                pase[1] = pase_max
 
         pase[0] = 0 if pase[0]-1 < 0 else pase[0]-1
         for key in lock.keys():

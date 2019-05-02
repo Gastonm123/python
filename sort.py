@@ -4,7 +4,6 @@ from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 import random
-from aux2 import Driver
 
 class Sorter:
     def __init__(self, size):
@@ -131,7 +130,7 @@ class FastSorter:
         self.colors[fixedm] = (1, 1, 1)
 
     def sort(self, a, b):
-        m = math.floor((a+b) / 2)
+        m = math.trunc((a+b) / 2)
 
         if m == a:
             return
